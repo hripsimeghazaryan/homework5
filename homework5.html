@@ -1,0 +1,112 @@
+
+	<canvas id="canvas"></canvas>
+	<script>
+	     
+	    const canvas = document.getElementById("canvas");
+		const context = canvas.getContext("2d"); 
+		canvas.width = 666;
+		canvas.height = 666;
+
+		
+          
+		const random = function(number){
+			return Math.floor(Math.random() * number) + 1;
+		};
+
+
+		const createBoxes = function(count, canvasWidth, canvasHeight){
+
+		   const someArray = [];
+
+           const colorArray = ["white" ,"violet", "thistle", "purple", "rebeccapurple", "plum", "orchid", "mediumpurple", "indigo", "darkviolet"];
+
+           for(let one = 0; one < count; one ++){
+           	   someArray[one] = {
+           	x: random(canvas.width - 40),
+            y: random(canvas.height - 40),
+            width: 30,
+            height: 30,
+            xDelta: 5,
+            yDelta: 5,
+            color: colorArray [random(colorArray.length - 1)],
+            draw: function(){
+           	context.fillStyle = this.color;
+           	context.fillRect(this.x, this.y, this.width, this.height);
+            },
+            update: function(){
+
+            this.x += this.xDelta;
+            this.y += this.yDelta;
+
+           	
+           	if(this.x + this.width >= canvas.width){
+                
+                this.xDelta = this.xDelta * - 1;
+           	};
+
+           	if(this.y + this.height >= canvas.height){
+           		
+           		this.yDelta = this.yDelta * - 1;
+    
+           	};
+
+           	if(this.x <= 0){
+           		
+           		this.xDelta = this.xDelta *  -1;
+           	};
+
+           	if(this.y <= 0){
+           	
+           	    this.yDelta = this.yDelta *  -1;
+           		
+           	};
+
+           	
+
+            } 
+           	   }
+           }
+           return someArray;
+		};
+
+		    const drawAll = function(miban){
+		    	context.fillStyle = "black"
+		    	context.fillRect(0, 0, canvas.width, canvas.height)
+		    	for(let i = 0; i < miban.length ; i ++){
+               		
+                	createBoxes(miban[i].draw());
+               
+		    	}
+		    };
+		    const updateAll = function(urishban){
+		    	for(let i = 0; i < urishban.length ; i ++){
+		    		createBoxes(urishban[i].update());
+		    	}
+		    };	
+
+
+            const boxes = createBoxes(30, canvas.width, canvas.height)
+	 
+	        const loop = function(){
+                drawAll(boxes);
+                updateAll(boxes); 
+	        	requestAnimationFrame(loop);
+	        };
+
+	        loop();
+
+
+	</script>
+
+
+
+
+
+
+	
+
+
+
+
+
+        

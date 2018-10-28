@@ -1,0 +1,200 @@
+
+<canvas id = "game"></canvas>
+
+
+<script>
+	const canvas = document.getElementById("game");
+	const context = canvas.getContext("2d");
+	canvas.width = 1350;
+	canvas.height = 650;
+
+
+
+	const background  = new Image();
+	background.src = "https://cdngamedevacademy.azureedge.net/wp-content/uploads/2017/04/game_with_background.png?x92588.jpg"; 
+	
+
+	const spaceShip = new Image();
+	spaceShip.src = "https://png2.kisspng.com/sh/1d3bea14edc23c6ca7320b5d428ef38f/L0KzQYm3U8I6N6lAfZH0aYP2gLBuTgNxaZRqReVxb3B3ebBuTgNxaZRqeARqZoSwg8H5igRmNZR0heJAdHX1PbrqjB50NaR1edVuc3jsgH68gfJkaWk6etdvNkLnQHA8Uck2PmE1SKMAMkK2QYS6UMc6QGE6RuJ3Zx==/kisspng-space-shooting-spacecraft-sprite-computer-icons-spaceship-5abca85bef62d0.5195600015223133079805.png";//need to rotate it 90 degrees
+
+    const alienSpaceship = new Image();
+    alienSpaceship.src = "https://media.indiedb.com/cache/images/games/1/68/67090/thumb_620x2000/spaceship.1.png";
+
+    const random = function(number){
+			return Math.floor(Math.random() * number) + 1;
+		};
+
+    const spaceShipspace = {
+	
+	    x: 50,
+		y: 290,
+		width: 100,
+		height: 100,
+		xDelta: 0,
+		yDelta: 0,
+		image: spaceShip,
+		draw: function(){
+			context.drawImage(this.image, this.x , this.y, this.width, this.height);
+		},
+		update: function(){
+			
+
+			if(this.x + this.width >= canvas.width){
+				this.xDelta = this.xDelta * -1;
+			}
+			if(this.y + this.height >= canvas.height){
+				this.yDelta = this.yDelta * -1;
+			}
+			if(this.x <= 0){
+				this.xDelta = this.xDelta * -1;
+			}
+			if(this.y <= 0){
+				this.yDelta = this.yDelta * -1;
+			};
+			this.x += this.xDelta;
+			this.y += this.yDelta;
+		}
+        };    
+
+
+
+
+
+
+    const spaceAlien = function(count, width, height){
+    	const qanak = [];
+    	for(let i = 0; i < count; i ++){
+    		qanak[qanak.length] = {
+
+    	    x: random(canvas.width),
+            y: random(canvas.height - 500),
+            width: 45,
+            height: 45,
+            xDelta: 4,
+            yDelta: 4,
+            image: alienSpaceship,
+            draw: function(){
+            
+            context.drawImage(this.image, this.x, this.y, this.width, this.height);
+            },
+            update: function(){
+
+            
+            if(this.x + this.width >= canvas.width){
+                
+                this.xDelta = this.xDelta * - 1;
+            };
+
+            if(this.y + this.height >= canvas.height){
+                
+                this.yDelta = this.yDelta * - 1;
+    
+            };
+
+            if(this.x <= 0){
+                
+                this.xDelta = this.xDelta *  -1;
+            };
+
+            if(this.y <= 0){
+            
+                this.yDelta = this.yDelta *  -1;
+                
+            };
+
+            this.x += this.xDelta;
+            this.y += this.yDelta;
+
+             if (this.x < spaceShipspace.x + spaceShipspace.width &&
+   			this.x + this.width > spaceShipspace.x &&
+   			this.y < spaceShipspace.y + spaceShipspace.height &&
+   			this.height + this.y > spaceShipspace.y){
+      				spaceShipspace.x = 50;
+      			    spaceShipspace.y = 290;
+      			    spaceShipspace.xDelta = 0;
+      			    spaceShipspace.yDelta = 0;
+                    this.x = random(canvas.width);
+                    this.y = random(canvas.height - 500);
+      				alert("Game Over");
+      			}
+      		 } 		
+    		}
+    	}
+    	return qanak;
+    };
+
+        const villain = spaceAlien(6, canvas.width, canvas.height);
+
+
+		const drawAll = function(alien){
+			for(let i = 0; i < alien.length; i++){
+				spaceAlien(alien[i].draw());
+
+
+			}
+		};
+
+		const updateAll = function(alien1){
+			for(let i = 0; i < alien1.length; i++){
+				spaceAlien(alien1[i].update());
+			}
+		};
+
+
+
+    const loop = function(){
+			
+            context.drawImage(background, 0, 0, canvas.width, canvas.height);
+            
+            drawAll(villain);
+            updateAll(villain);
+            spaceShipspace.draw();
+            spaceShipspace.update();
+          
+            requestAnimationFrame(loop);
+
+		};
+	loop();
+
+
+	const leftKey = 37;
+    const upKey = 38;
+    const rightKey = 39;
+    const downKey = 40;
+    document.addEventListener('keydown', function(event){
+        	if(event.keyCode === rightKey){
+        		spaceShipspace.xDelta = 5;
+        	}
+            }, false);
+    document.addEventListener('keyup', function(event){
+        	spaceShipspace.xDelta = 0;
+            }, false);
+    document.addEventListener('keydown', function(event){
+        	if(event.keyCode === leftKey){
+        		spaceShipspace.xDelta = - 5;
+        	}
+            }, false);
+    document.addEventListener('keyup', function(event){
+        	spaceShipspace.xDelta = 0;
+            }, false);
+    document.addEventListener('keydown', function(event){
+        	if(event.keyCode === downKey){
+        		spaceShipspace.yDelta = 5;
+        	}
+            }, false);
+    document.addEventListener('keyup', function(event){
+        	spaceShipspace.yDelta = 0;
+            }, false);
+    document.addEventListener('keydown', function(event){
+        	if(event.keyCode === upKey){
+        		spaceShipspace.yDelta = - 5;
+        	}
+        	if(spaceShipspace.x + spaceShipspace.width === canvas.width){
+        		spaceShipspace.xDelta = 0;
+        	}
+            }, false);
+    document.addEventListener('keyup', function(event){
+        	spaceShipspace.yDelta = 0;
+            }, false);
+
+	</script>
